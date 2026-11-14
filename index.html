@@ -57,7 +57,7 @@
 </head>
 <body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 relative overflow-y-auto">
 
-  <!-- Thanh điều hướng gọn gàng -->
+  <!-- Thanh điều hướng -->
   <header class="max-w-5xl mx-auto px-4 pt-3 pb-2 flex flex-wrap items-center justify-between gap-3">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center text-white font-extrabold text-lg shadow-md">
@@ -96,19 +96,16 @@
     <!-- ==================== TAB 1: CHẾ ĐỘ ĐÚNG / SAI ==================== -->
     <section id="view-game" class="space-y-3">
 
-      <!-- Chọn cấp độ -->
-      <div class="glass-card p-2.5 rounded-2xl flex flex-wrap items-center justify-between gap-2">
+      <!-- Thanh tùy chỉnh Cấp độ & Tốc độ -->
+      <div class="glass-card p-2.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5">
+        <!-- Cấp độ -->
         <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-xs font-bold uppercase text-slate-400 px-1.5">Cấp độ:</span>
-          <button type="button" onclick="setDifficulty('easy')" data-diff="easy" class="diff-btn px-3 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow">Cơ bản (1-5)</button>
-          <button type="button" onclick="setDifficulty('medium')" data-diff="medium" class="diff-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20">Chuẩn (1-10)</button>
-          <button type="button" onclick="setDifficulty('hard')" data-diff="hard" class="diff-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20">Nâng cao (11-20)</button>
-          <button type="button" onclick="setDifficulty('custom')" data-diff="custom" class="diff-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20">Chọn bảng riêng</button>
-        </div>
-
-        <div id="custom-table-selector" class="hidden flex items-center gap-2">
-          <label class="text-xs font-semibold">Bảng:</label>
-          <select id="custom-num" onchange="resetAndStart()" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-0.5 text-xs font-bold">
+          <span class="text-xs font-bold uppercase text-slate-400 px-1">Cấp độ:</span>
+          <button type="button" onclick="setDifficulty('easy')" data-diff="easy" class="diff-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow">Cơ bản (1-5)</button>
+          <button type="button" onclick="setDifficulty('medium')" data-diff="medium" class="diff-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20">Chuẩn (1-10)</button>
+          <button type="button" onclick="setDifficulty('hard')" data-diff="hard" class="diff-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20">Nâng cao (11-20)</button>
+          <button type="button" onclick="setDifficulty('custom')" data-diff="custom" class="diff-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20">Bảng riêng</button>
+          <select id="custom-num" onchange="resetAndStart()" class="hidden bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-0.5 text-xs font-bold">
             <option value="2">Bảng 2</option>
             <option value="3">Bảng 3</option>
             <option value="4">Bảng 4</option>
@@ -118,6 +115,15 @@
             <option value="8">Bảng 8</option>
             <option value="9">Bảng 9</option>
           </select>
+        </div>
+
+        <!-- Tốc độ thời gian -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs font-bold uppercase text-slate-400 px-1">Tốc độ:</span>
+          <button type="button" onclick="setSpeed(30000)" data-speed="30000" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow">Siêu chậm (30s)</button>
+          <button type="button" onclick="setSpeed(20000)" data-speed="20000" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-emerald-500/20">Chậm (20s)</button>
+          <button type="button" onclick="setSpeed(12000)" data-speed="12000" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-emerald-500/20">Vừa (12s)</button>
+          <button type="button" onclick="setSpeed(0)" data-speed="0" class="speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-emerald-500/20">Không giới hạn</button>
         </div>
       </div>
 
@@ -141,16 +147,16 @@
       <div id="game-card" class="glass-card rounded-3xl p-5 sm:p-7 shadow-xl relative transition-all duration-200 border-2 border-transparent">
         
         <!-- Thanh đếm ngược thời gian -->
-        <div class="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mb-5">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 w-full transition-all duration-75 ease-linear"></div>
+        <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mb-5">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 w-full transition-all duration-100 ease-linear"></div>
         </div>
 
-        <!-- Màn hình Bắt đầu / Kết thúc (Đã thu gọn để luôn thấy nút Bắt đầu) -->
+        <!-- Màn hình Bắt đầu / Kết thúc -->
         <div id="overlay-screen" class="text-center py-3 space-y-4">
           <div id="overlay-emoji" class="text-5xl">🚀</div>
-          <h2 id="overlay-title" class="text-2xl font-extrabold">Sẵn sàng thử thách phản xạ?</h2>
+          <h2 id="overlay-title" class="text-2xl font-extrabold">Sẵn sàng luyện phép nhân?</h2>
           <p id="overlay-desc" class="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-xs sm:text-sm">
-            Chọn nhanh phép nhân là <b>ĐÚNG</b> hay <b>SAI</b> trước khi hết giờ.<br>
+            Chế độ hiện tại: <b class="text-emerald-500" id="mode-label">Siêu chậm (30 giây/câu)</b>.<br>
             Phím tắt: <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">←</kbd> (Đúng) | <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">→</kbd> (Sai) | <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">Space</kbd> (Bắt đầu)
           </p>
           <div class="pt-1">
@@ -162,8 +168,13 @@
 
         <!-- Màn hình Chơi game -->
         <div id="play-screen" class="hidden text-center space-y-5">
-          <div class="inline-block px-3 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs font-bold">
-            Câu hỏi #<span id="question-count">1</span>
+          <div class="flex items-center justify-center gap-3">
+            <span class="px-3 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs font-bold">
+              Câu hỏi #<span id="question-count">1</span>
+            </span>
+            <span id="time-text" class="px-3 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 text-xs font-bold">
+              30.0s
+            </span>
           </div>
 
           <!-- Phép toán -->
@@ -262,9 +273,7 @@
           osc.start(now);
           osc.stop(now + 0.06);
         }
-      } catch (err) {
-        // Bỏ qua lỗi âm thanh nếu trình duyệt chặn
-      }
+      } catch (err) {}
     }
 
     function toggleSound() {
@@ -299,6 +308,7 @@
 
     // ==================== LOGIC TRÒ CHƠI ĐÚNG / SAI ====================
     let difficulty = 'easy';
+    let baseTime = 30000; // Mặc định 30 giây (siêu chậm)
     let score = 0;
     let combo = 0;
     let highScore = 0;
@@ -311,7 +321,6 @@
     let isPlaying = false;
     let isLocked = false;
     let timerInterval = null;
-    const BASE_TIME = 4500;
 
     document.getElementById('highscore-val').textContent = highScore;
 
@@ -320,13 +329,38 @@
       difficulty = diff;
       document.querySelectorAll('.diff-btn').forEach(btn => {
         if (btn.dataset.diff === diff) {
-          btn.className = 'diff-btn px-3 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow';
+          btn.className = 'diff-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow';
         } else {
-          btn.className = 'diff-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20';
+          btn.className = 'diff-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-indigo-500/20';
         }
       });
-      document.getElementById('custom-table-selector').classList.toggle('hidden', diff !== 'custom');
+      document.getElementById('custom-num').classList.toggle('hidden', diff !== 'custom');
       if (isPlaying) resetAndStart();
+    }
+
+    function setSpeed(ms) {
+      playTone('click');
+      baseTime = ms;
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        if (parseInt(btn.dataset.speed) === ms) {
+          btn.className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow';
+        } else {
+          btn.className = 'speed-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200/70 dark:bg-slate-800/70 hover:bg-emerald-500/20';
+        }
+      });
+
+      const labels = {
+        30000: 'Siêu chậm (30 giây/câu)',
+        20000: 'Chậm (20 giây/câu)',
+        12000: 'Vừa (12 giây/câu)',
+        0: 'Không giới hạn thời gian'
+      };
+      const modeLabel = document.getElementById('mode-label');
+      if (modeLabel) modeLabel.textContent = labels[ms];
+
+      if (isPlaying && !isLocked) {
+        startTimer();
+      }
     }
 
     function resetAndStart() {
@@ -406,20 +440,32 @@
 
     function startTimer() {
       stopTimer();
-      const duration = Math.max(2000, BASE_TIME - combo * 120);
-      const startTime = Date.now();
       const timerBar = document.getElementById('timer-bar');
+      const timeText = document.getElementById('time-text');
+
+      if (baseTime === 0) {
+        timerBar.style.width = '100%';
+        timeText.textContent = '∞ Thoải mái';
+        return;
+      }
+
+      // Giữ nguyên thời gian chậm rãi, không bị ép quá nhanh
+      const duration = baseTime;
+      const startTime = Date.now();
 
       timerInterval = setInterval(() => {
         const elapsed = Date.now() - startTime;
-        const pct = Math.max(0, 100 - (elapsed / duration) * 100);
-        timerBar.style.width = pct + '%';
+        const remaining = Math.max(0, duration - elapsed);
+        const pct = (remaining / duration) * 100;
 
-        if (pct <= 0) {
+        timerBar.style.width = pct + '%';
+        timeText.textContent = (remaining / 1000).toFixed(1) + 's';
+
+        if (remaining <= 0) {
           stopTimer();
           handleResult(false, true);
         }
-      }, 30);
+      }, 50);
     }
 
     function stopTimer() {
@@ -461,7 +507,7 @@
 
         setTimeout(() => {
           if (isPlaying) nextQuestion();
-        }, 450);
+        }, 800);
 
       } else {
         playTone('wrong');
@@ -471,7 +517,7 @@
 
         setTimeout(() => {
           gameOver(isTimeout);
-        }, 1400);
+        }, 1800);
       }
     }
 
@@ -491,7 +537,7 @@
       document.getElementById('highscore-val').textContent = highScore;
     }
 
-    // Hỗ trợ phím tắt bàn phím (Cả khi bắt đầu và khi đang chơi)
+    // Hỗ trợ phím tắt bàn phím
     document.addEventListener('keydown', (e) => {
       if (!isPlaying) {
         if (e.code === 'Space' || e.key === 'Enter') {
