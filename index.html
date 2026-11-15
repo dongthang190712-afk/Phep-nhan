@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toán Nhanh 360 - Luyện Phép Nhân Đúng / Sai</title>
+  <title>Toán Nhanh 360 - Luyện Phép Nhân & Bảng Xếp Hạng</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -35,12 +35,12 @@
   </script>
   <style>
     .glass-card {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.4);
     }
     .dark .glass-card {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.78);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .grid-highlight {
@@ -70,13 +70,16 @@
       </div>
     </div>
 
-    <!-- Chuyển tab -->
-    <div class="flex items-center gap-1.5 glass-card p-1 rounded-xl">
-      <button type="button" onclick="switchTab('game')" id="tab-game" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow">
-        🎮 Đúng / Sai
+    <!-- Chuyển 3 tab -->
+    <div class="flex items-center gap-1 glass-card p-1 rounded-xl">
+      <button type="button" onclick="switchTab('game')" id="tab-game" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow">
+        🎮 Thi Đấu
       </button>
-      <button type="button" onclick="switchTab('table')" id="tab-table" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50">
-        📊 Bảng Cửu Chương
+      <button type="button" onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50">
+        🏆 Xếp Hạng
+      </button>
+      <button type="button" onclick="switchTab('table')" id="tab-table" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50">
+        📊 Cửu Chương
       </button>
     </div>
 
@@ -138,7 +141,7 @@
           <div id="combo-val" class="text-2xl font-extrabold text-amber-500">0 🔥</div>
         </div>
         <div class="glass-card py-2.5 px-3 rounded-2xl text-center">
-          <div class="text-[11px] font-bold uppercase text-slate-400">Kỷ lục</div>
+          <div class="text-[11px] font-bold uppercase text-slate-400">Top 1 Hiện Tại</div>
           <div id="highscore-val" class="text-2xl font-extrabold text-emerald-500">0</div>
         </div>
       </div>
@@ -152,25 +155,38 @@
         </div>
 
         <!-- Màn hình Bắt đầu / Kết thúc -->
-        <div id="overlay-screen" class="text-center py-3 space-y-4">
+        <div id="overlay-screen" class="text-center py-2 space-y-3.5">
           <div id="overlay-emoji" class="text-5xl">🚀</div>
-          <h2 id="overlay-title" class="text-2xl font-extrabold">Sẵn sàng luyện phép nhân?</h2>
+          <h2 id="overlay-title" class="text-2xl font-extrabold">Sẵn sàng thi đấu?</h2>
           <p id="overlay-desc" class="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-xs sm:text-sm">
-            Chế độ hiện tại: <b class="text-emerald-500" id="mode-label">Siêu chậm (30 giây/câu)</b>.<br>
-            Phím tắt: <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">←</kbd> (Đúng) | <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">→</kbd> (Sai) | <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">Space</kbd> (Bắt đầu)
+            Nhập tên của bạn để lưu thành tích lên <b>Bảng Xếp Hạng</b>.<br>
+            Phím tắt: <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">←</kbd> (Đúng) | <kbd class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">→</kbd> (Sai)
           </p>
-          <div class="pt-1">
+
+          <!-- Ô nhập tên người chơi -->
+          <div class="max-w-xs mx-auto">
+            <input type="text" id="player-name-input" maxlength="20" placeholder="Nhập tên người chơi..." 
+              class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-indigo-500/40 focus:border-indigo-500 outline-none text-center font-bold text-sm shadow-inner transition-all">
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
             <button type="button" onclick="startGame()" class="cursor-pointer px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-pink-500 hover:from-indigo-500 hover:to-pink-400 text-white font-extrabold text-lg shadow-lg shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all">
               ▶ BẮT ĐẦU NGAY
+            </button>
+            <button type="button" onclick="switchTab('leaderboard')" class="cursor-pointer px-5 py-3.5 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-600 dark:text-amber-400 font-extrabold text-sm transition-all">
+              🏆 Xem Xếp Hạng
             </button>
           </div>
         </div>
 
         <!-- Màn hình Chơi game -->
         <div id="play-screen" class="hidden text-center space-y-5">
-          <div class="flex items-center justify-center gap-3">
+          <div class="flex items-center justify-center gap-2.5 flex-wrap">
+            <span class="px-3 py-0.5 rounded-full bg-pink-500/10 text-pink-600 dark:text-pink-300 text-xs font-bold">
+              👤 <span id="active-player-label">Người chơi</span>
+            </span>
             <span class="px-3 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs font-bold">
-              Câu hỏi #<span id="question-count">1</span>
+              Câu #<span id="question-count">1</span>
             </span>
             <span id="time-text" class="px-3 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 text-xs font-bold">
               30.0s
@@ -188,7 +204,7 @@
             </div>
           </div>
 
-          <!-- Thông báo giải thích khi sai -->
+          <!-- Thông báo giải thích -->
           <div id="feedback-msg" class="h-6 text-sm font-bold transition-opacity opacity-0"></div>
 
           <!-- Hai nút ĐÚNG / SAI -->
@@ -207,7 +223,47 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 2: BẢNG CỬU CHƯƠNG TƯƠNG TÁC ==================== -->
+    <!-- ==================== TAB 2: BẢNG XẾP HẠNG ==================== -->
+    <section id="view-leaderboard" class="hidden space-y-4">
+      <div class="glass-card p-5 sm:p-6 rounded-3xl shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+          <div>
+            <h2 class="text-xl font-extrabold flex items-center gap-2">
+              <span>🏆 Bảng Vàng Thành Tích (Top 10)</span>
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Tự động lưu kỷ lục của các người chơi trên thiết bị này</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="switchTab('game')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow">
+              + Thi đấu tiếp
+            </button>
+            <button type="button" onclick="clearLeaderboard()" class="px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-500 text-xs font-bold">
+              🗑️ Xóa BXH
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-800 text-xs uppercase text-slate-400">
+                <th class="py-3 px-3">Hạng</th>
+                <th class="py-3 px-3">Người chơi</th>
+                <th class="py-3 px-3">Cấp độ</th>
+                <th class="py-3 px-3 text-center">Combo</th>
+                <th class="py-3 px-3 text-right">Điểm số</th>
+                <th class="py-3 px-3 text-right hidden sm:table-cell">Thời gian</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body" class="divide-y divide-slate-200/60 dark:divide-slate-800/60 text-sm">
+              <!-- JS tự động điền dữ liệu -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: BẢNG CỬU CHƯƠNG TƯƠNG TÁC ==================== -->
     <section id="view-table" class="hidden space-y-4">
       <div class="glass-card p-5 rounded-3xl shadow-xl">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
@@ -287,22 +343,141 @@
       document.getElementById('btn-theme').textContent = html.classList.contains('dark') ? '☀️' : '🌙';
     }
 
+    // ==================== QUẢN LÝ BẢNG XẾP HẠNG ====================
+    const STORAGE_KEY = 'toanNhanhLeaderboard_v1';
+    const NAME_KEY = 'toanNhanhLastPlayerName';
+
+    function getLeaderboard() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveScoreToLeaderboard(name, scoreVal, maxComboVal, diffKey) {
+      if (scoreVal <= 0) return;
+      const list = getLeaderboard();
+      const diffNames = {
+        easy: 'Cơ bản (1-5)',
+        medium: 'Chuẩn (1-10)',
+        hard: 'Nâng cao (11-20)',
+        custom: 'Bảng ' + document.getElementById('custom-num').value
+      };
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' +
+                      now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+
+      list.push({
+        name: name || 'Người chơi ẩn danh',
+        score: scoreVal,
+        combo: maxComboVal,
+        level: diffNames[diffKey] || 'Cơ bản',
+        time: timeStr
+      });
+
+      // Sắp xếp điểm giảm dần, nếu bằng điểm thì xét combo cao hơn
+      list.sort((a, b) => b.score - a.score || b.combo - a.combo);
+      const top10 = list.slice(0, 10);
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(top10));
+      } catch (e) {}
+
+      renderLeaderboard();
+      updateTop1Display();
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById('leaderboard-body');
+      const list = getLeaderboard();
+
+      if (list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-10 text-center text-slate-400">
+              Chưa có dữ liệu xếp hạng nào. Hãy thi đấu ngay để ghi danh lên bảng vàng! 🚀
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = list.map((item, idx) => {
+        let rankBadge = `<span class="font-bold text-slate-400">#${idx + 1}</span>`;
+        let rowBg = '';
+        if (idx === 0) {
+          rankBadge = '<span class="text-xl">🥇</span>';
+          rowBg = 'bg-amber-500/10 font-bold';
+        } else if (idx === 1) {
+          rankBadge = '<span class="text-xl">🥈</span>';
+          rowBg = 'bg-slate-400/10 font-semibold';
+        } else if (idx === 2) {
+          rankBadge = '<span class="text-xl">🥉</span>';
+          rowBg = 'bg-orange-500/10 font-semibold';
+        }
+
+        return `
+          <tr class="${rowBg} hover:bg-indigo-500/5 transition-colors">
+            <td class="py-3 px-3">${rankBadge}</td>
+            <td class="py-3 px-3 font-bold text-slate-800 dark:text-slate-100">${escapeHtml(item.name)}</td>
+            <td class="py-3 px-3 text-xs text-slate-500 dark:text-slate-400">${escapeHtml(item.level)}</td>
+            <td class="py-3 px-3 text-center font-bold text-amber-500">${item.combo} 🔥</td>
+            <td class="py-3 px-3 text-right font-extrabold text-indigo-600 dark:text-indigo-400 text-base">${item.score}</td>
+            <td class="py-3 px-3 text-right text-xs text-slate-400 hidden sm:table-cell">${item.time}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function clearLeaderboard() {
+      if (confirm('Bạn có chắc chắn muốn xóa toàn bộ Bảng Xếp Hạng để thi đấu lại từ đầu không?')) {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        renderLeaderboard();
+        updateTop1Display();
+      }
+    }
+
+    function updateTop1Display() {
+      const list = getLeaderboard();
+      const topScore = list.length > 0 ? list[0].score : 0;
+      document.getElementById('highscore-val').textContent = topScore;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Khôi phục tên người chơi gần nhất
+    try {
+      const savedName = localStorage.getItem(NAME_KEY);
+      if (savedName) document.getElementById('player-name-input').value = savedName;
+    } catch (e) {}
+
     // ==================== CHUYỂN TAB ====================
     function switchTab(tab) {
       playTone('click');
-      const isGame = tab === 'game';
-      document.getElementById('view-game').classList.toggle('hidden', !isGame);
-      document.getElementById('view-table').classList.toggle('hidden', isGame);
+      const tabs = ['game', 'leaderboard', 'table'];
+      tabs.forEach(t => {
+        const isCurrent = (t === tab);
+        document.getElementById('view-' + t).classList.toggle('hidden', !isCurrent);
+        const btn = document.getElementById('tab-' + t);
+        if (isCurrent) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50';
+        }
+      });
 
-      const btnGame = document.getElementById('tab-game');
-      const btnTable = document.getElementById('tab-table');
-      if (isGame) {
-        btnGame.className = 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow';
-        btnTable.className = 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50';
-      } else {
-        btnTable.className = 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow';
-        btnGame.className = 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-800/50';
+      if (tab !== 'game') {
         stopTimer();
+      }
+      if (tab === 'leaderboard') {
+        renderLeaderboard();
       }
     }
 
@@ -311,18 +486,13 @@
     let baseTime = 30000; // Mặc định 30 giây (siêu chậm)
     let score = 0;
     let combo = 0;
-    let highScore = 0;
-    try {
-      highScore = parseInt(localStorage.getItem('toanNhanhHighScore') || '0');
-    } catch (e) {}
-
+    let maxCombo = 0;
+    let playerName = 'Người chơi';
     let questionCount = 0;
     let currentQuestion = { a: 0, b: 0, shown: 0, actual: 0, isCorrect: true };
     let isPlaying = false;
     let isLocked = false;
     let timerInterval = null;
-
-    document.getElementById('highscore-val').textContent = highScore;
 
     function setDifficulty(diff) {
       playTone('click');
@@ -349,15 +519,6 @@
         }
       });
 
-      const labels = {
-        30000: 'Siêu chậm (30 giây/câu)',
-        20000: 'Chậm (20 giây/câu)',
-        12000: 'Vừa (12 giây/câu)',
-        0: 'Không giới hạn thời gian'
-      };
-      const modeLabel = document.getElementById('mode-label');
-      if (modeLabel) modeLabel.textContent = labels[ms];
-
       if (isPlaying && !isLocked) {
         startTimer();
       }
@@ -370,8 +531,15 @@
 
     function startGame() {
       playTone('click');
+      const inputVal = document.getElementById('player-name-input').value.trim();
+      playerName = inputVal || 'Người chơi #' + (getLeaderboard().length + 1);
+      try { localStorage.setItem(NAME_KEY, inputVal); } catch (e) {}
+
+      document.getElementById('active-player-label').textContent = playerName;
+
       score = 0;
       combo = 0;
+      maxCombo = 0;
       questionCount = 0;
       isPlaying = true;
       isLocked = false;
@@ -449,7 +617,6 @@
         return;
       }
 
-      // Giữ nguyên thời gian chậm rãi, không bị ép quá nhanh
       const duration = baseTime;
       const startTime = Date.now();
 
@@ -490,11 +657,8 @@
       if (isRight) {
         playTone('correct');
         combo++;
+        if (combo > maxCombo) maxCombo = combo;
         score += 10 + (combo * 2);
-        if (score > highScore) {
-          highScore = score;
-          try { localStorage.setItem('toanNhanhHighScore', highScore); } catch (e) {}
-        }
         updateStats();
 
         card.classList.add('border-emerald-500');
@@ -515,6 +679,9 @@
         feedback.textContent = `${isTimeout ? 'Hết giờ!' : 'Sai rồi!'} Đáp án đúng: ${currentQuestion.a} × ${currentQuestion.b} = ${currentQuestion.actual}`;
         feedback.className = 'h-6 text-sm font-bold text-rose-500 transition-opacity opacity-100';
 
+        // Lưu kết quả vào Bảng Xếp Hạng
+        saveScoreToLeaderboard(playerName, score, maxCombo, difficulty);
+
         setTimeout(() => {
           gameOver(isTimeout);
         }, 1800);
@@ -526,27 +693,27 @@
       document.getElementById('play-screen').classList.add('hidden');
       document.getElementById('overlay-screen').classList.remove('hidden');
 
-      document.getElementById('overlay-emoji').textContent = score >= 100 ? '🏆' : '🎯';
-      document.getElementById('overlay-title').textContent = isTimeout ? 'Hết thời gian mất rồi!' : 'Trò chơi kết thúc!';
-      document.getElementById('overlay-desc').innerHTML = `Bạn đạt <b class="text-indigo-500 text-base">${score} điểm</b> (chuỗi tối đa <b class="text-amber-500">${combo} combo</b>).<br>Phép tính vừa rồi: <b>${currentQuestion.a} × ${currentQuestion.b} = ${currentQuestion.actual}</b>`;
+      const list = getLeaderboard();
+      const rankIdx = list.findIndex(item => item.name === playerName && item.score === score);
+      const rankText = rankIdx !== -1 ? ` — Hạng <b>#${rankIdx + 1}</b> trên BXH!` : '';
+
+      document.getElementById('overlay-emoji').textContent = (rankIdx === 0 && score > 0) ? '👑' : (score >= 100 ? '🏆' : '🎯');
+      document.getElementById('overlay-title').textContent = isTimeout ? 'Hết thời gian mất rồi!' : 'Hoàn thành lượt thi!';
+      document.getElementById('overlay-desc').innerHTML = `<b>${escapeHtml(playerName)}</b> đạt <b class="text-indigo-500 text-base">${score} điểm</b> (chuỗi tối đa <b class="text-amber-500">${maxCombo} combo</b>)${rankText}<br>Phép tính vừa rồi: <b>${currentQuestion.a} × ${currentQuestion.b} = ${currentQuestion.actual}</b>`;
     }
 
     function updateStats() {
       document.getElementById('score-val').textContent = score;
       document.getElementById('combo-val').textContent = combo + ' 🔥';
-      document.getElementById('highscore-val').textContent = highScore;
     }
 
-    // Hỗ trợ phím tắt bàn phím
+    // Hỗ trợ phím tắt bàn phím (tránh kích hoạt khi đang gõ tên)
     document.addEventListener('keydown', (e) => {
-      if (!isPlaying) {
-        if (e.code === 'Space' || e.key === 'Enter') {
-          e.preventDefault();
-          startGame();
-        }
+      if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+        if (e.key === 'Enter') startGame();
         return;
       }
-      if (isLocked) return;
+      if (!isPlaying || isLocked) return;
       if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'd') {
         submitAnswer(true);
       } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 's') {
@@ -599,7 +766,10 @@
       activeCell.classList.add('grid-active');
     }
 
+    // Khởi tạo ban đầu
     buildMultiplicationTable();
+    renderLeaderboard();
+    updateTop1Display();
   </script>
 </body>
 </html>
